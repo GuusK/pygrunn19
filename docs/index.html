@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>PyGrunn - What was its type? </title>
+
+		<meta name="description" content="Presentation held at PyGrunn 2019">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section id="opening">
+					<h1>What is its type?</h1>
+					<h3 class="author">by Guus Klinkenberg</h3>
+					<small><a href="https://github.com/GuusK/pygrunn19">github.com/GuusK/pygrunn19</a></small>
+				</section>
+
+				<section id="overview">
+					<h2>Overview</h2>
+					<p>About me</p>
+					<p>Type systems</p>
+					<p>A typical look at Python</p>
+					<p>How good is it?</p>
+				</section>
+
+				<section id="assumptions">
+					<h2>Assumption</h2>
+					<p>General beginner and/or unknown with type hinting</p>
+				</section>
+
+				<section id="aboutme">
+					<h2>About me</h2>
+					<p>Master student, finishing thesis</p>
+					<p>Stichting Nationaal informatica Congres (SNiC)</p>
+					<p>Developer at Ticketguard</p>
+				</section>
+
+				<section id="mycodingbackground">
+					<h3>My coding background</h3>
+					<p>Late to the game</p>
+					<div class="fragment">
+						<ul>
+							<li>C</li>
+							<li>Java</li>
+							<li>Matlab</li>
+							<li>Python</li>
+							<li>Go</li>
+						</ul>
+					</div>
+
+					<aside class="notes">Was late with starting with programming. 8 years total now. Mostly compiled languages</aside>
+				</section>
+
+				<section id="typesystem">
+					<h2>Type systems</h2>
+				</section>
+
+				<section id="typesystemdiffs">
+					<h2>Difference</h2>
+					<p>Compiled vs Interpreted</p>
+
+					<aside class="notes">As far as this is possible.
+					Yes, it's boring, but important</aside>
+				</section>
+
+				<section id="prostatic">
+					<h2>Advantages of </br>static typing</h2>
+					<p>Everything known beforehand</p>
+					<p>Loads of auto-completion possible</p>
+					<!-- niet alleen bij invullen types, maar ook bij method chaining -->
+				</section>
+
+				<section id="constatic">
+					<h2>Disadvantages of</br>static typing</h2>
+					<p>Loads of verbosity</p>
+					<p>Upfront investment</p>
+				</section>
+
+				<section id="prodynamic">
+					<h2>Advantage of</br>dynamic typing</h2>
+					<p>Quicker development</p>
+					<p>Duck typing</p>
+					<p>Concise code</p>
+					<aside class="notes">If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.</aside>
+				</section>
+
+				<section id="condynamic">
+					<h2>Disadvantages of</br>dynamic typing</h2>
+					<p>Harder to navigate</p>
+					<p>Runtime failures</p>
+				</section>
+
+				<section id="finally">
+					<h2>A typical look at Python</h2>
+				</section>
+
+				<section id="thdiffs">
+					<pre><code class="hljs python" data-trim>
+# Python 2.7+
+def fun1():
+    # type: () -> int
+    return 42
+
+
+def fun2():
+    """
+    :rtype: int
+    """
+    return 42
+
+# Python 3.6+
+def fun3() -> int:
+    return 42
+					</code></pre>
+				</section>
+
+				<section id="thexamples">
+					<pre><code class="hljs python" data-trim>
+def loose_greeting(name):
+    return 'Hello {}'.format(name)
+
+
+def loose_typed_greeting(name: str) -> str:
+    return 'Hello {}'.format(name)
+
+
+def strict_greeting(name):
+    return 'Hello ' + name
+
+
+def strict_typed_greeting(name: str) -> str:
+    return 'Hello ' + name
+					</code></pre>
+				</section>
+
+				<section id="thexamples">
+					<pre><code class="hljs python">
+print(strict_greeting("Guus"))
+print(strict_greeting(42))
+
+print(strict_typed_greeting("Guus"))
+print(strict_typed_greeting(42))
+					</code></pre>
+				</section>
+
+				<section id="theaxmples">
+					<img src="img/1-intro.png">
+				</section>
+
+				<section id="thvariables">
+					<pre><code class="hljs python">
+name: str = 'Hello PyGrunn'
+time: float = time.time()
+
+lst1: List[int] = [1, 2, 3]
+lst2: List[Any] = [1, '2', 3.0]
+
+datetime: datetime = datetime.strptime('2019-05-10 14:45:00', '%Y-%m-%d %H:%M:%S')
+					</code></pre>
+				</section>
+
+				<section id="simplefarm1">
+					<pre><code class="hljs python">
+class Animal(object):
+
+    def __init__(self, name: str):
+        self.name = name
+
+
+class Cow(Animal):
+
+    def __init__(self, name: str, tag: int, production_rate: int):
+        super().__init__(name)
+        self.tag: int = tag
+        self.production_rate: int = production_rate
+
+    def milk(self) -> int:
+        return self.production_rate
+
+
+class Bull(Animal):
+
+    def __init__(self, name: str):
+        super().__init__(name)</code></pre>
+				</section>
+
+				<section id="thvariables2">
+					<pre><code class="hljs python">
+bertus = Bull('Bertus')
+bertha: Cow = Cow('Bertha', 38, 25)
+generalist: Animal = Bull('Scott')
+specialist: Bull = Animal('Sterling')
+					</code></pre>
+				</section>
+
+				<section id="thvariables2">
+					<img src="img/2-variables.png">
+				</section>
+
+				<section id="thoverload">
+					<pre><code class="hljs python">
+def double(i):
+    return i * 2
+					</code></pre>
+				</section>
+
+				<section id="thoverload">
+					<pre><code class="hljs python">
+from typing import overload
+
+@overload
+def double(i: int) -> int:
+    ...
+
+
+@overload
+def double(i: str) -> str:
+    ...
+
+
+def double(i):
+    return i * 2
+					</code></pre>
+				</section>
+
+				<section id="thoverload">
+					<pre><code class="hljs python">
+# Very much wrong
+def double(i: Union[str, int, List[Any]]) -> Union[str, int, List[Any]]:
+     return i * 2
+					</code></pre>
+				</section>
+
+				<section id="thoverload">
+					<pre><code class="hljs python">
+print(double(2))
+print(double("hello"))
+print(double(0.3))
+					</code></pre>
+				</section>
+
+				<section id="thoverload">
+					<img src="img/3-overload.png">
+				</section>
+
+				<section id="simplefarm2">
+					<pre><code class="hljs python">
+class Animal(object):
+
+    def __init__(self, name: str):
+        self.name = name
+
+
+class Cow(Animal):
+
+    def __init__(self, name: str, tag: int, production_rate: int):
+        super().__init__(name)
+        self.tag: int = tag
+        self.production_rate: int = production_rate
+
+    def milk(self) -> int:
+        return self.production_rate
+
+
+class Bull(Animal):
+
+    def __init__(self, name: str):
+        super().__init__(name)
+					</code></pre>
+				</section>
+
+				<section id="engineeredfarm1">
+					<pre><code class="hljs python">
+from abc import ABC, abstractmethod
+
+
+class Animal(ABC):
+    def __init__(self, name: str, tag: int):
+        self.name = name
+        self.tag = tag
+
+    @abstractmethod
+    def say(self) -> str:
+        pass
+
+
+class Milkable(Animal, ABC):
+    def __init__(self, name: str, tag: int, production_rate: int):
+        super().__init__(name, tag)
+        self.production_rate = production_rate
+
+    def milk(self):
+        return self.production_rate
+
+
+class Fox(Animal):
+
+    def say(self) -> str:
+        return 'Ring-ding-ding-ding-dingeringeding!'
+
+
+class Cow(Milkable):
+    def say(self) -> str:
+        return 'moo'
+					</code></pre>
+				</section>
+
+				<section id="thgenerics">
+					<pre><code class="hljs python">
+from overengineered_farm.farm import Fox, Milkable, Animal, Cow
+
+
+def milk_animal(animal: Milkable) -> int:
+    return animal.milk()
+
+
+def speak_animal(animal: Animal) -> str:
+    return animal.say()
+
+
+fox = Fox('Ylvis', 0)
+print(speak_animal(fox))
+print(milk_animal(fox))
+
+cow = Cow('Bertha', 37, 42)
+print(speak_animal(cow))
+print(milk_animal(cow))
+					</code></pre>
+				</section>
+
+				<section id="thgenerics">
+					<img src="img/4-generics.png">
+				</section>
+
+				<section id="forwardref">
+					<h2>Self/Forward referencing</h2>
+					<pre><code class="hljs python">
+class PositionBroken:
+    def __init__(self, pos: int):
+        self.pos = pos
+
+    def __add__(self, other: PositionBroken) -> PositionBroken:
+        return PositionBroken(self.pos + other.pos)
+					</code></pre>
+				</section>
+
+				<section id="forwardref">
+					<img src="img/7-forwardref.png">
+				</section>
+
+				<section id="forwardref">
+					<pre><code class="hljs python">
+class Position:
+    def __init__(self, pos: int):
+        self.pos = pos
+
+    def __add__(self, other: 'Position') -> 'Position':
+        return Position(self.pos + other.pos)
+
+					</code></pre>
+				</section>
+
+				<section id="forwardref">
+					<pre><code class="hljs python">
+from __future__ import annotations
+
+
+class Position:
+    def __init__(self, pos: int):
+        self.pos = pos
+
+    def __add__(self, other: Position) -> Position:
+        return Position(self.pos + other.pos)
+					</code></pre>
+				</section>
+
+				<section id="sohow">
+					<h3>So... how does it work?</h3>
+				</section>
+
+
+				<section id="evaluation">
+					<pre><code class="hljs python">
+def test(something: print('evaluated')):
+    print(something)
+
+test("something")
+test("else")
+
+# Output:
+#
+# evaluated
+# something
+# else
+					</code></pre>
+				</section>
+
+				<section id="performance">
+					<pre><code>
+					</code></pre>
+					<pre><code class="hljs console">
+$ python -X importtime 6-performance-empty.py
+import time: self [us] | cumulative | imported package
+...
+import time:      6733 |      20817 | site
+					</code></pre>
+				</section>
+
+				<section id="performance">
+					<pre><code class="hljs python">
+import typing
+					</code></pre>
+					<pre><code class="hljs console">
+$ python -X importtime 6-performance-typing.py
+import time: self [us] | cumulative | imported package
+...
+import time:      6337 |      44613 | typing
+					</code></pre>
+				</section>
+
+				<section id="good">
+					<h2>How good is it?</h2>
+				</section>
+
+				<section id="idiomatic">
+					<h2>Ask forgiveness not permission</h2>
+				</section>
+
+				<section id="armin">
+					<h2>Armin Ronacher</h2>
+					<p>Founder of Flask, Werkzeug and more</p>
+					<blockquote cite="http://lucumr.pocoo.org/2014/8/24/revenge-of-the-types/">
+						&ldquo;For static typing to make sense the type system needs to be good. A type system where you take two types and you can figure out how they relate to each other. Python doesn't have that.&rdquo;
+					</blockquote>
+					<aside class="notes">Also says python is a project already full steam ahead</aside>
+				</section>
+
+				<section id="guido">
+					<h2>Guido van Rossum</h2>
+					<div class="smaller">
+						<img class="smaller" src="img/guido.jpg">
+					</div>
+					<aside class="notes">Creator of python. Author of PEP 484, type hinting</aside>
+				</section>
+
+				<section id="ide">
+					<h2>Use the tools provided</h2>
+					<p>IDE can do so much</p>
+					<p>Better code analysis</p>
+					<aside class="notes">
+						lower required mental capacity
+					</aside>
+				</section>
+
+				<section id="consider">
+					<h2>Consider</h2>
+					<ul>
+						<li class="fragment">How large is your project?</li>
+						<li class="fragment">How many people are working on it?</li>
+						<li class="fragment">How often do new people start working on it?</li>
+					</ul>
+				</section>
+
+				<section id="optional">
+					<h2>It is optional</h2>
+				</section>
+
+				<section id="summary">
+					<h2>Summary</h2>
+					<ul>
+						<li>Type systems</li>
+						<li>Basic examples</li>
+						<li>Place in python</li>
+					</ul>
+					<br /><br />
+					<p>Consider it</p>
+				</section>
+
+
+				<section id="final">
+					<p>Slides and code via</p> 
+					<a href="https://GuusK.github.io/pygrunn19">GuusK.github.io/pygrunn19</a>
+					<div>
+						<img class="qrcode" src="img/githubqr.png">
+					</div>
+					<p>Thanks to Martijn Luinstra for code review</p>
+				</section>
+
+
+<!-- Wie ben ik
+	- MSc student -> project in massive simulation of Smart grids and how they react to changes in the market
+	- SNiC -> disruptive technology
+	- Ticketguard
+
+Mijn programmeerervaring
+	- python via martijn, thanks to him
+	- programmeren bij uni
+	- Eerst C, toen Java, toen van alles en nog wat
+
+	- Java, veel text, maar veel autmatisch aangevuld (voorbeelden)
+	- veel inzicht in wat er gebeurd via IDE
+
+	- overstap naar dynamische talen
+	- IDE doet minder
+
+quick explanation dynamic language/duck typing?
+
+finally subject at hand: type hinting
+	- since python3.5
+	- arguments against (unpythonic)
+	- basic examples (boederij?)
+	- why it helps
+		- IDE
+		- lagere mentale last
+		- instappen op project
+	- Abstract Base Classes (PEP3119)
+	- don't go overboard
+
+Start playing with it, thanks for the attention, slides & examples on guusk.github.io/pygrunn19 -->
+
+
+			</div>
+
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+				// Display presentation control arrows
+				controls: false,
+
+				// Help the user learn the controls by providing hints, for example by
+				// bouncing the down arrow when they first encounter a vertical slide
+				controlsTutorial: false,
+
+				// Determines where controls appear, "edges" or "bottom-right"
+				controlsLayout: 'bottom-right',
+
+				// Visibility rule for backwards navigation arrows; "faded", "hidden"
+				// or "visible"
+				controlsBackArrows: 'faded',
+
+				// Display a presentation progress bar
+				progress: true,
+
+				// Display the page number of the current slide
+				slideNumber: false,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				history: false,
+
+				// Enable keyboard shortcuts for navigation
+				keyboard: true,
+
+				// Enable the slide overview mode
+				overview: true,
+
+				// Vertical centering of slides
+				center: true,
+
+				// Enables touch navigation on devices with touch input
+				touch: true,
+
+				// Loop the presentation
+				loop: false,
+
+				// Change the presentation direction to be RTL
+				rtl: false,
+
+				// See https://github.com/hakimel/reveal.js/#navigation-mode
+				navigationMode: 'default',
+
+				// Randomizes the order of slides each time the presentation loads
+				shuffle: false,
+
+				// Turns fragments on and off globally
+				fragments: true,
+
+				// Flags whether to include the current fragment in the URL,
+				// so that reloading brings you to the same fragment position
+				fragmentInURL: false,
+
+				// Flags if the presentation is running in an embedded mode,
+				// i.e. contained within a limited portion of the screen
+				embedded: false,
+
+				// Flags if we should show a help overlay when the questionmark
+				// key is pressed
+				help: false,
+
+				// Flags if speaker notes should be visible to all viewers
+				showNotes: false,
+
+				// Global override for autoplaying embedded media (video/audio/iframe)
+				// - null: Media will only autoplay if data-autoplay is present
+				// - true: All media will autoplay, regardless of individual setting
+				// - false: No media will autoplay, regardless of individual setting
+				autoPlayMedia: null,
+
+				// Global override for preloading lazy-loaded iframes
+				// - null: Iframes with data-src AND data-preload will be loaded when within
+				//   the viewDistance, iframes with only data-src will be loaded when visible
+				// - true: All iframes with data-src will be loaded when within the viewDistance
+				// - false: All iframes with data-src will be loaded only when visible
+				preloadIframes: null,
+
+				// Number of milliseconds between automatically proceeding to the
+				// next slide, disabled when set to 0, this value can be overwritten
+				// by using a data-autoslide attribute on your slides
+				autoSlide: 0,
+
+				// Stop auto-sliding after user input
+				autoSlideStoppable: true,
+
+				// Use this method for navigation when auto-sliding
+				autoSlideMethod: Reveal.navigateNext,
+
+				// Specify the average time in seconds that you think you will spend
+				// presenting each slide. This is used to show a pacing timer in the
+				// speaker view
+				defaultTiming: 0,
+
+				// Enable slide navigation via mouse wheel
+				mouseWheel: false,
+
+				// Hide cursor if inactive
+				hideInactiveCursor: true,
+
+				// Time before the cursor is hidden (in ms)
+				hideCursorTime: 5000,
+
+				// Hides the address bar on mobile devices
+				hideAddressBar: true,
+
+				// Opens links in an iframe preview overlay
+				// Add `data-preview-link` and `data-preview-link="false"` to customise each link
+				// individually
+				previewLinks: false,
+
+				// Transition style
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				// Transition speed
+				transitionSpeed: 'default', // default/fast/slow
+
+				// Transition style for full page slide backgrounds
+				backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+
+				// Number of slides away from the current that are visible
+				viewDistance: 3,
+
+				// Parallax background image
+				parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+				// Parallax background size
+				parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+				// Number of pixels to move the parallax background per slide
+				// - Calculated automatically unless specified
+				// - Set to 0 to disable movement along an axis
+				parallaxBackgroundHorizontal: null,
+				parallaxBackgroundVertical: null,
+
+				// The display mode that will be used to show slides
+				display: 'block',
+
+				dependencies: [
+								{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+								{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+								{ src: 'plugin/highlight/highlight.js', async: true },
+								{ src: 'plugin/search/search.js', async: true },
+								{ src: 'plugin/zoom-js/zoom.js', async: true },
+								{ src: 'plugin/notes/notes.js', async: true }
+							]
+
+			});
+
+		</script>
+
+	</body>
+</html>
